@@ -1,0 +1,6 @@
+# arquivo reservado para transformar os modelos em um pacote python
+from .models_aluno import Aluno
+from .models_professor import Professor
+from .models_turma import Turma
+from .models_task import ModelsTask
+

@@ -1,0 +1,1 @@
+<!-- Realizar o README após a finalização do projeto, por hora utilize o DOCS/documentação.md para anotar a documentação do projeto, que tambem será feita posteriormente via Swagger.  -->
