@@ -5,4 +5,4 @@ from sqlalchemy.orm import relationship
 class ModelsTask: 
     __nome_da_tabela__ = "tasks"
 
-    #TODO definir as colunas da tabela tasks 
+    #TODO definir as colunas da tabela tasks

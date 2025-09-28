@@ -13,4 +13,4 @@ class Aluno(banco_de_dados.Model):
     turma_id = banco_de_dados.Column(banco_de_dados.String(100), nullable=False)
     data_nascimento = banco_de_dados.Column(banco_de_dados.Date, nullable=False)
     nota_primeiro_semestre = banco_de_dados.Column(banco_de_dados.Float, nullable=False)
-    nota_segundo_semestre = banco_de_dados.Column(banco_de_dados.Float, nullable=False) 
+    nota_segundo_semestre = banco_de_dados.Column(banco_de_dados.Float, nullable=False)
