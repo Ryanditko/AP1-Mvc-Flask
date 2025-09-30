@@ -1,13 +1,7 @@
-# realizar o CRUD de professores aqui
-from flask import render_template, request, redirect, url_for
-from models.models_professor import banco_de_dados
-from models.models_professor import Professor
+from controllers.ctrls_professores import ProfessorController
 
-class ProfessorApi:
-
-    @staticmethod
-    def ProfessorPost():
-        if request.method == 'POST':
-              pass  
-         
-    # TODO implementar os outros métodos aqui abaixo   
+def rotas_professores(app):
+    app.add_url_rule('/professores', view_func=ProfessorController.listar_professores, methods=['GET'])
+    app.add_url_rule('/professores', view_func=ProfessorController.criar_professor, methods=['POST'])
+    app.add_url_rule('/professores/<int:professor_id>', view_func=ProfessorController.atualizar_professor, methods=['PUT'])
+    app.add_url_rule('/professores/<int:professor_id>', view_func=ProfessorController.deletar_professor, methods=['DELETE'])
