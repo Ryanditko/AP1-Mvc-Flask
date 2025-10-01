@@ -1,0 +1,176 @@
+openapi: 3.0.0
+info:
+  title: API de Gerenciamento Escolar
+  version: "1.0"
+  description: API para gerenciamento de Professores, Alunos e Turmas
+
+servers:
+  - url: http://127.0.0.1:5000
+
+paths:
+#------------- Professores -------------
+  /professores:
+    get:
+      summary: Listar todos os professores
+      tags:
+        - Professores
+      responses:
+        '200':
+          description: Lista de professores ou mensagem de nenhum professor encontrado
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Professor'
+                  - type: object
+                    properties:
+                      mensagem:
+                        type: string
+                        example: 'Nenhum professor encontrado.'
+                        
+    post:
+      summary: Criar um novo professor
+      tags:
+        - Professores
+      requestBody:
+        description: Dados do professor
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfessorInput'
+      responses:
+        '201':
+          description: Professor criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfessorCriado'
+        '400':
+          description: Dados inválidos ou campos obrigatórios ausentes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: 'nome, idade e materia são campos obrigatórios.'
+
+  /professores/{professor_id}:
+    put:
+      summary: Atualiza um professor existente
+      tags:
+        - Professores
+      parameters:
+        - in: path
+          name: professor_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Dados atualizados do professor
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfessorInput'
+      responses:
+        '200':
+          description: Professor atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Professor atualizado com sucesso!'
+        '404':
+          description: Professor não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: 'Professor não encontrado.'
+
+    delete:
+      summary: Deleta um professor
+      tags:
+        - Professores
+      parameters:
+        - in: path
+          name: professor_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Professor deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Professor deletado com sucesso!'
+        '404':
+          description: Professor não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: 'Professor não encontrado.'
+
+components:
+  schemas:
+    ProfessorBase:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: 'João Silva'
+        idade:
+          type: integer
+          example: 40
+        materia:
+          type: string
+          example: 'Matemática'
+        observacoes:
+          type: string
+          example: 'Professor titular da turma 101'
+
+    Professor:
+      allOf:
+        - $ref: '#/components/schemas/ProfessorBase'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+    
+    ProfessorInput:
+      allOf:
+        - $ref: '#/components/schemas/ProfessorBase'
+      required:
+        - nome
+        - idade
+        - materia
+
+    ProfessorCriado:
+      allOf:
+        - $ref: '#/components/schemas/Professor'
+        - type: object
+          properties:
+            mensagem:
+              type: string
+              example: 'Professor criado com sucesso!'
