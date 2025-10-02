@@ -131,6 +131,129 @@ paths:
                     type: string
                     example: 'Professor não encontrado.'
 
+#------------- Turmas -------------
+  /turmas:
+    get:
+      summary: Listar todas as turmas
+      tags:
+        - Turmas
+      responses:
+        '200':
+          description: Lista de turmas ou mensagem de nenhuma turma encontrada
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Turma'
+                  - type: object
+                    properties:
+                      mensagem:
+                        type: string
+                        example: 'Nenhuma turma encontrada.'
+    post:
+      summary: Criar uma nova turma
+      tags:
+        - Turmas
+      requestBody:
+        description: Dados da turma
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TurmaInput'
+      responses:
+        '201':
+          description: Turma criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TurmaCriada'
+        '400':
+          description: Dados inválidos ou campos obrigatórios ausentes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: 'nome e professor_id são campos obrigatórios.'
+
+  /turmas/{turma_id}:
+    put:
+      summary: Atualiza uma turma existente
+      tags:
+        - Turmas
+      parameters:
+        - in: path
+          name: turma_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Dados atualizados da turma
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TurmaInput'
+      responses:
+        '200':
+          description: Turma atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Turma atualizada com sucesso!'
+        '404':
+          description: Turma não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: 'Turma não encontrada.'
+
+    delete:
+      summary: Deleta uma turma
+      tags:
+        - Turmas
+      parameters:
+        - in: path
+          name: turma_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Turma deletada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: 'Turma deletada com sucesso!'
+        '404':
+          description: Turma não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  erro:
+                    type: string
+                    example: 'Turma não encontrada.'
+
+#------------- Schemas -------------
 components:
   schemas:
     ProfessorBase:
@@ -174,3 +297,41 @@ components:
             mensagem:
               type: string
               example: 'Professor criado com sucesso!'
+
+    TurmaBase:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: 'Turma 101'
+        professor_id:
+          type: integer
+          example: 1
+        ativo:
+          type: boolean
+          example: true
+
+    Turma:
+      allOf:
+        - $ref: '#/components/schemas/TurmaBase'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 10
+
+    TurmaInput:
+      allOf:
+        - $ref: '#/components/schemas/TurmaBase'
+      required:
+        - nome
+        - professor_id
+
+    TurmaCriada:
+      allOf:
+        - $ref: '#/components/schemas/Turma'
+        - type: object
+          properties:
+            mensagem:
+              type: string
+              example: 'Turma criada com sucesso!'

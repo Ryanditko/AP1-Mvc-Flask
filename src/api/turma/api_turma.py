@@ -1,13 +1,7 @@
-# realizar o CRUD de turmas aqui
-from flask import render_template, request, redirect, url_for
-from models.models_turma import banco_de_dados
-from models.models_turma import Turma
+from controllers.ctrls_turma import TurmaController
 
-class TurmaApi:
-
-    @staticmethod
-    def TurmaPost():
-        if request.method == 'POST':
-              pass 
-        
-    # TODO implementar os outros métodos aqui abaixo
+def rotas_turmas(app):
+    app.add_url_rule('/turmas', view_func=TurmaController.listar_turmas, methods=['GET'])
+    app.add_url_rule('/turmas', view_func=TurmaController.criar_turma, methods=['POST'])
+    app.add_url_rule('/turmas/<int:turma_id>', view_func=TurmaController.atualizar_turma, methods=['PUT'])
+    app.add_url_rule('/turmas/<int:turma_id>', view_func=TurmaController.deletar_turma, methods=['DELETE'])
