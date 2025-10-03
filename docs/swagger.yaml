@@ -1,337 +1,397 @@
-openapi: 3.0.0
+swagger: "2.0"
 info:
   title: API de Gerenciamento Escolar
   version: "1.0"
-  description: API para gerenciamento de Professores, Alunos e Turmas
+  description: API para gerenciamento de Professores e Turmas
 
-servers:
-  - url: http://127.0.0.1:5000
+host: 127.0.0.1:5000
+basePath: /
+schemes:
+  - http
 
 paths:
-#------------- Professores -------------
+  # -------- Professores --------
   /professores:
     get:
       summary: Listar todos os professores
       tags:
         - Professores
       responses:
-        '200':
-          description: Lista de professores ou mensagem de nenhum professor encontrado
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: array
-                    items:
-                      $ref: '#/components/schemas/Professor'
-                  - type: object
-                    properties:
-                      mensagem:
-                        type: string
-                        example: 'Nenhum professor encontrado.'
-                        
+        200:
+          description: Lista de professores
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Professor'
     post:
       summary: Criar um novo professor
       tags:
         - Professores
-      requestBody:
-        description: Dados do professor
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProfessorInput'
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ProfessorInput'
       responses:
-        '201':
+        201:
           description: Professor criado com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProfessorCriado'
-        '400':
-          description: Dados inválidos ou campos obrigatórios ausentes
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  erro:
-                    type: string
-                    example: 'nome, idade e materia são campos obrigatórios.'
+          schema:
+            $ref: '#/definitions/ProfessorCriado'
+        400:
+          description: Dados inválidos
 
   /professores/{professor_id}:
+    get:
+      summary: Obter professor por ID
+      tags:
+        - Professores
+      parameters:
+        - in: path
+          name: professor_id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Professor encontrado
+          schema:
+            $ref: '#/definitions/Professor'
+        404:
+          description: Professor não encontrado
     put:
-      summary: Atualiza um professor existente
+      summary: Atualizar professor existente
       tags:
         - Professores
       parameters:
         - in: path
           name: professor_id
+          type: integer
+          required: true
+        - in: body
+          name: body
           required: true
           schema:
-            type: integer
-      requestBody:
-        description: Dados atualizados do professor
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProfessorInput'
+            $ref: '#/definitions/ProfessorInput'
       responses:
-        '200':
+        200:
           description: Professor atualizado com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  mensagem:
-                    type: string
-                    example: 'Professor atualizado com sucesso!'
-        '404':
+        404:
           description: Professor não encontrado
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  erro:
-                    type: string
-                    example: 'Professor não encontrado.'
-
     delete:
-      summary: Deleta um professor
+      summary: Deletar professor
       tags:
         - Professores
       parameters:
         - in: path
           name: professor_id
+          type: integer
           required: true
-          schema:
-            type: integer
       responses:
-        '200':
+        200:
           description: Professor deletado com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  mensagem:
-                    type: string
-                    example: 'Professor deletado com sucesso!'
-        '404':
+        404:
           description: Professor não encontrado
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  erro:
-                    type: string
-                    example: 'Professor não encontrado.'
 
-#------------- Turmas -------------
+  # -------- Turmas --------
   /turmas:
     get:
       summary: Listar todas as turmas
       tags:
         - Turmas
       responses:
-        '200':
-          description: Lista de turmas ou mensagem de nenhuma turma encontrada
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: array
-                    items:
-                      $ref: '#/components/schemas/Turma'
-                  - type: object
-                    properties:
-                      mensagem:
-                        type: string
-                        example: 'Nenhuma turma encontrada.'
+        200:
+          description: Lista de turmas
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Turma'
     post:
       summary: Criar uma nova turma
       tags:
         - Turmas
-      requestBody:
-        description: Dados da turma
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TurmaInput'
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/TurmaInput'
       responses:
-        '201':
+        201:
           description: Turma criada com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TurmaCriada'
-        '400':
-          description: Dados inválidos ou campos obrigatórios ausentes
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  erro:
-                    type: string
-                    example: 'nome e professor_id são campos obrigatórios.'
+          schema:
+            $ref: '#/definitions/TurmaCriada'
+        400:
+          description: Dados inválidos
 
   /turmas/{turma_id}:
+    get:
+      summary: Obter turma por ID
+      tags:
+        - Turmas
+      parameters:
+        - in: path
+          name: turma_id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Turma encontrada
+          schema:
+            $ref: '#/definitions/Turma'
+        404:
+          description: Turma não encontrada
     put:
-      summary: Atualiza uma turma existente
+      summary: Atualizar turma existente
       tags:
         - Turmas
       parameters:
         - in: path
           name: turma_id
+          type: integer
+          required: true
+        - in: body
+          name: body
           required: true
           schema:
-            type: integer
-      requestBody:
-        description: Dados atualizados da turma
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TurmaInput'
+            $ref: '#/definitions/TurmaInput'
       responses:
-        '200':
+        200:
           description: Turma atualizada com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  mensagem:
-                    type: string
-                    example: 'Turma atualizada com sucesso!'
-        '404':
+        404:
           description: Turma não encontrada
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  erro:
-                    type: string
-                    example: 'Turma não encontrada.'
-
     delete:
-      summary: Deleta uma turma
+      summary: Deletar turma
       tags:
         - Turmas
       parameters:
         - in: path
           name: turma_id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Turma deletada com sucesso
+        404:
+          description: Turma não encontrada
+
+  # -------- Alunos --------
+  /alunos:
+    get:
+      summary: Listar todos os alunos
+      tags:
+        - Alunos
+      responses:
+        200:
+          description: Lista de alunos
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Aluno'
+    post:
+      summary: Criar um novo aluno
+      tags:
+        - Alunos
+      parameters:
+        - in: body
+          name: body
           required: true
           schema:
-            type: integer
+            $ref: '#/definitions/AlunoInput'
       responses:
-        '200':
-          description: Turma deletada com sucesso
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  mensagem:
-                    type: string
-                    example: 'Turma deletada com sucesso!'
-        '404':
-          description: Turma não encontrada
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  erro:
-                    type: string
-                    example: 'Turma não encontrada.'
+        201:
+          description: Aluno criado com sucesso
+          schema:
+            $ref: '#/definitions/AlunoCriado'
+        400:
+          description: Dados inválidos
 
-#------------- Schemas -------------
-components:
-  schemas:
-    ProfessorBase:
-      type: object
-      properties:
-        nome:
-          type: string
-          example: 'João Silva'
-        idade:
+  /alunos/{aluno_id}:
+    get:
+      summary: Obter aluno por ID
+      tags:
+        - Alunos
+      parameters:
+        - in: path
+          name: aluno_id
           type: integer
-          example: 40
-        materia:
-          type: string
-          example: 'Matemática'
-        observacoes:
-          type: string
-          example: 'Professor titular da turma 101'
-
-    Professor:
-      allOf:
-        - $ref: '#/components/schemas/ProfessorBase'
-        - type: object
-          properties:
-            id:
-              type: integer
-              example: 1
-    
-    ProfessorInput:
-      allOf:
-        - $ref: '#/components/schemas/ProfessorBase'
-      required:
-        - nome
-        - idade
-        - materia
-
-    ProfessorCriado:
-      allOf:
-        - $ref: '#/components/schemas/Professor'
-        - type: object
-          properties:
-            mensagem:
-              type: string
-              example: 'Professor criado com sucesso!'
-
-    TurmaBase:
-      type: object
-      properties:
-        nome:
-          type: string
-          example: 'Turma 101'
-        professor_id:
+          required: true
+      responses:
+        200:
+          description: Aluno encontrado
+          schema:
+            $ref: '#/definitions/Aluno'
+        404:
+          description: Aluno não encontrado
+    put:
+      summary: Atualizar aluno existente
+      tags:
+        - Alunos
+      parameters:
+        - in: path
+          name: aluno_id
           type: integer
-          example: 1
-        ativo:
-          type: boolean
-          example: true
+          required: true
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/AlunoInput'
+      responses:
+        200:
+          description: Aluno atualizado com sucesso
+        404:
+          description: Aluno não encontrado
+    delete:
+      summary: Deletar aluno
+      tags:
+        - Alunos
+      parameters:
+        - in: path
+          name: aluno_id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: Aluno deletado com sucesso
+        404:
+          description: Aluno não encontrado
 
-    Turma:
-      allOf:
-        - $ref: '#/components/schemas/TurmaBase'
-        - type: object
-          properties:
-            id:
-              type: integer
-              example: 10
+# -------- Schemas --------
+definitions:
+  ProfessorBase:
+    type: object
+    properties:
+      nome:
+        type: string
+        example: "João Silva"
+      idade:
+        type: integer
+        example: 40
+      materia:
+        type: string
+        example: "Matemática"
+      observacoes:
+        type: string
+        example: "Professor titular da turma 101"
 
-    TurmaInput:
-      allOf:
-        - $ref: '#/components/schemas/TurmaBase'
-      required:
-        - nome
-        - professor_id
+  Professor:
+    allOf:
+      - $ref: '#/definitions/ProfessorBase'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 1
 
-    TurmaCriada:
-      allOf:
-        - $ref: '#/components/schemas/Turma'
-        - type: object
-          properties:
-            mensagem:
-              type: string
-              example: 'Turma criada com sucesso!'
+  ProfessorInput:
+    allOf:
+      - $ref: '#/definitions/ProfessorBase'
+    required:
+      - nome
+      - idade
+      - materia
+
+  ProfessorCriado:
+    allOf:
+      - $ref: '#/definitions/Professor'
+      - type: object
+        properties:
+          mensagem:
+            type: string
+            example: "Professor criado com sucesso!"
+
+  TurmaBase:
+    type: object
+    properties:
+      nome:
+        type: string
+        example: "Turma 101"
+      professor_id:
+        type: integer
+        example: 1
+      ativo:
+        type: boolean
+        example: true
+
+  Turma:
+    allOf:
+      - $ref: '#/definitions/TurmaBase'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+
+  TurmaInput:
+    allOf:
+      - $ref: '#/definitions/TurmaBase'
+    required:
+      - nome
+      - professor_id
+
+  TurmaCriada:
+    allOf:
+      - $ref: '#/definitions/Turma'
+      - type: object
+        properties:
+          mensagem:
+            type: string
+            example: "Turma criada com sucesso!"
+
+  AlunoBase:
+    type: object
+    properties:
+      nome:
+        type: string
+        example: "Maria Santos"
+      idade:
+        type: integer
+        example: 18
+      turma_id:
+        type: integer
+        example: 1
+      data_nascimento:
+        type: string
+        format: date
+        example: "2006-10-07"
+      nota_primeiro_semestre:
+        type: number
+        format: float
+        example: 7.5
+      nota_segundo_semestre:
+        type: number
+        format: float
+        example: 8.0
+
+  Aluno:
+    allOf:
+      - $ref: '#/definitions/AlunoBase'
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          média_final:
+            type: number
+            format: float
+            example: 7.75
+
+  AlunoInput:
+    allOf:
+      - $ref: '#/definitions/AlunoBase'
+    required:
+      - nome
+      - idade
+      - turma_id
+      - data_nascimento
+      - nota_primeiro_semestre
+      - nota_segundo_semestre
+
+  AlunoCriado:
+    allOf:
+      - $ref: '#/definitions/Aluno'
+      - type: object
+        properties:
+          mensagem:
+            type: string
+            example: "Aluno criado com sucesso!"

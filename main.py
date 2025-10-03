@@ -1,14 +1,17 @@
 # criando uma pathlib para facilitar o uso em outros sistemas operacionais
 from pathlib import Path
 arquivo_src = Path(__file__).parent / "src"
+import sys
+sys.path.append(str(arquivo_src))
 
 import os
 from flask import Flask
-from config import Config
+from config.config import Config
 from models import banco_de_dados
 from flasgger import Swagger
 from api.professores.api_professores import rotas_professores
-from api.turmas.api_turma import rotas_turmas
+from api.turma.api_turma import rotas_turmas
+from api.aluno.api_alunos import rotas_aluno
 
 # TODO configurar a aplicação flask aqui abaixo (sem a necessidade de views/html para a aplicação)
 app = Flask(__name__)
@@ -24,6 +27,7 @@ with app.app_context():
 
 rotas_professores(app)
 rotas_turmas(app)
+rotas_aluno(app)
 
 if __name__ == '__main__':
     app.run(debug=True)
