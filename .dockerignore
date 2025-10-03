@@ -1,0 +1,16 @@
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.env
+.git/
+.gitignore
+.vscode/
+docs/
+Instruções.pdf
+*.DS_Store
