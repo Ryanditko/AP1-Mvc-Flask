@@ -11,6 +11,5 @@ __pycache__/
 .git/
 .gitignore
 .vscode/
-docs/
 Instruções.pdf
 *.DS_Store
