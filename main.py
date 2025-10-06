@@ -13,11 +13,9 @@ from api.professores.api_professores import rotas_professores
 from api.turma.api_turma import rotas_turmas
 from api.aluno.api_alunos import rotas_aluno
 
-# TODO configurar a aplicação flask aqui abaixo (sem a necessidade de views/html para a aplicação)
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# iniciando o banco de dados 
 banco_de_dados.init_app(app)
 
 swagger = Swagger(app, template_file='docs/swagger.yaml')
@@ -30,4 +28,8 @@ rotas_turmas(app)
 rotas_aluno(app)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    host = os.environ.get('HOST', '0.0.0.0')
+    debug = os.environ.get('FLASK_ENV') != 'production'
+    
+    app.run(host=host, port=port, debug=debug)

@@ -1,6 +1,6 @@
 from . import banco_de_dados
 
-# inicializa a classe aluno que herda de database.Model, se tornando uma tabela dentro do banco de dados.
+# inicializa a classe turma que herda de database.Model, se tornando uma tabela dentro do banco de dados.
 class Turma(banco_de_dados.Model):
 
     __tablename__ = 'turmas'

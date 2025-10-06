@@ -4,7 +4,7 @@ info:
   version: "1.0"
   description: API para gerenciamento de Professores e Turmas
 
-host: 127.0.0.1:5000
+host: ""
 basePath: /
 schemes:
   - http
