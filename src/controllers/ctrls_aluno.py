@@ -71,6 +71,23 @@ class AlunoController:
          except Exception as e:
              banco_de_dados.session.rollback()
              return jsonify({'erro': f'Erro ao salvar no banco: {str(e)}'}), 500
+         
+     @staticmethod
+     def buscar_aluno(aluno_id):
+         aluno = Aluno.query.get(aluno_id)
+         if aluno:
+             return jsonify({
+                 'id': aluno.id,
+                 'nome': aluno.nome,
+                 'idade': aluno.idade,
+                 'turma_id': aluno.turma_id,
+                 'data_nascimento': aluno.data_nascimento.strftime('%Y-%m-%d'),
+                 'nota_primeiro_semestre': aluno.nota_primeiro_semestre,
+                 'nota_segundo_semestre': aluno.nota_segundo_semestre,
+                 'media_final': (aluno.nota_primeiro_semestre + aluno.nota_segundo_semestre) / 2
+             }), 200
+         else:
+             return jsonify({'erro': 'Aluno não encontrado.'}), 404
      
      @staticmethod
      def atualizar_aluno(aluno_id):
@@ -83,6 +100,9 @@ class AlunoController:
              aluno.nota_primeiro_semestre = dados.get('nota_primeiro_semestre', aluno.nota_primeiro_semestre)
              aluno.nota_segundo_semestre = dados.get('nota_segundo_semestre', aluno.nota_segundo_semestre)
 
+             turma = Turma.query.get(dados.get('turma_id'))
+             if not turma:
+                 return jsonify({'erro': f'Turma com id {dados.get("turma_id")} não existe.'}), 400
              banco_de_dados.session.commit()
              return jsonify({'mensagem': 'Aluno atualizado com sucesso!'}), 200
          else:

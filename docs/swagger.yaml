@@ -177,6 +177,14 @@ paths:
       responses:
         200:
           description: Turma atualizada com sucesso
+        400:
+          description: Dados inválidos ou ID de professor inexistente
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+                example: "Professor com id 5 não existe."
         404:
           description: Turma não encontrada
     delete:
@@ -279,6 +287,14 @@ paths:
       responses:
         200:
           description: Aluno atualizado com sucesso
+        400:
+          description: Dados inválidos ou ID de turma inexistente
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+                example: "Turma com id 10 não existe."
         404:
           description: Aluno não encontrado
     delete:

@@ -20,7 +20,22 @@ class ProfessorController:
               return jsonify(resultado), 200
           else:
               return jsonify({'mensagem': 'Nenhum professor encontrado.'}), 200
-     
+          
+
+     @staticmethod
+     def buscar_professor(professor_id):
+         professor = Professor.query.get(professor_id)
+         if professor:
+             return jsonify({
+                 'id': professor.id,
+                 'nome': professor.nome,
+                 'idade': professor.idade,
+                 'materia': professor.materia,
+                 'observacoes': professor.observacoes
+             }), 200
+         else:
+             return jsonify({'erro': 'Professor não encontrado.'}), 404
+
      @staticmethod
      def criar_professor():
          dados = request.get_json()

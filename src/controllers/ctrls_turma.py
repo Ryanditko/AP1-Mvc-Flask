@@ -19,6 +19,19 @@ class TurmaController:
                return jsonify(resultado), 200
           else:
                return jsonify({'mensagem': 'Nenhuma turma encontrada.'}), 200
+          
+     @staticmethod
+     def buscar_turma(turma_id):
+          turma = Turma.query.get(turma_id)
+          if turma:
+               return jsonify({
+                    'id': turma.id,
+                    'nome': turma.nome,
+                    'professor_id': turma.professor_id,
+                    'ativo': turma.ativo
+               }), 200
+          else:
+               return jsonify({'erro': 'Turma não encontrada.'}), 404
 
      @staticmethod
      def criar_turma():
@@ -57,6 +70,10 @@ class TurmaController:
                turma.professor_id = dados.get('professor_id', turma.professor_id)
                turma.ativo = dados.get('ativo', turma.ativo)
 
+               professor = Professor.query.get(dados.get('professor_id'))
+               if not professor:
+                    return jsonify({'erro': f'Professor com id {dados.get("professor_id")} não existe'}), 400
+               
                banco_de_dados.session.commit()
                return jsonify({'mensagem': 'Turma atualizada com sucesso!'}), 200
           else:
