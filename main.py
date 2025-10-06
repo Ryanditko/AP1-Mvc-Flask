@@ -20,6 +20,10 @@ banco_de_dados.init_app(app)
 
 swagger = Swagger(app, template_file='docs/swagger.yaml')
 
+@app.route('/')
+def index():
+    return 'API de Gerenciamento Escolar funcionando! A documentação está disponível em: /apidocs'
+
 with app.app_context():
     banco_de_dados.create_all()
 
