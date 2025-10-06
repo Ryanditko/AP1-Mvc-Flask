@@ -79,6 +79,7 @@ paths:
           description: Professor não encontrado
     delete:
       summary: Deletar professor
+      description: Deleta um professor apenas se não houver turmas vinculadas a ele
       tags:
         - Professores
       parameters:
@@ -91,6 +92,16 @@ paths:
           description: Professor deletado com sucesso
         404:
           description: Professor não encontrado
+        409:
+          description: Conflito - professor possui turmas vinculadas
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+                example: "Não é possível deletar o professor pois existem turmas vinculadas."
+        500:
+          description: Erro interno do servidor
 
   # -------- Turmas --------
   /turmas:
@@ -107,6 +118,7 @@ paths:
               $ref: '#/definitions/Turma'
     post:
       summary: Criar uma nova turma
+      description: Cria uma turma vinculada a um professor existente
       tags:
         - Turmas
       parameters:
@@ -121,7 +133,15 @@ paths:
           schema:
             $ref: '#/definitions/TurmaCriada'
         400:
-          description: Dados inválidos
+          description: Dados inválidos ou ID de professor inexistente
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+                example: "Professor com id 5 não existe."
+        500:
+          description: Erro interno do servidor
 
   /turmas/{turma_id}:
     get:
@@ -161,6 +181,7 @@ paths:
           description: Turma não encontrada
     delete:
       summary: Deletar turma
+      description: Deleta uma turma apenas se não houver alunos vinculados a ela
       tags:
         - Turmas
       parameters:
@@ -173,6 +194,16 @@ paths:
           description: Turma deletada com sucesso
         404:
           description: Turma não encontrada
+        409:
+          description: Conflito - turma possui alunos vinculados
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+                example: "Não é possível deletar a turma pois existem alunos vinculados."
+        500:
+          description: Erro interno do servidor
 
   # -------- Alunos --------
   /alunos:
@@ -189,6 +220,7 @@ paths:
               $ref: '#/definitions/Aluno'
     post:
       summary: Criar um novo aluno
+      description: Cria um aluno vinculado a uma turma existente
       tags:
         - Alunos
       parameters:
@@ -203,7 +235,15 @@ paths:
           schema:
             $ref: '#/definitions/AlunoCriado'
         400:
-          description: Dados inválidos
+          description: Dados inválidos ou ID de turma inexistente
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+                example: "Turma com id 10 não existe."
+        500:
+          description: Erro interno do servidor
 
   /alunos/{aluno_id}:
     get:

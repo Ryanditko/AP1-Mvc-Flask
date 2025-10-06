@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from models import Aluno, banco_de_dados
+from models import Aluno, Turma, banco_de_dados
 
 class AlunoController:
      # A chamada para esse método seria feita diretamente pela classe, sem a necessidade de criar um objeto (uma instância):
@@ -30,6 +30,10 @@ class AlunoController:
          campos_obrigatorios = ['nome', 'idade', 'turma_id', 'data_nascimento', 'nota_primeiro_semestre', 'nota_segundo_semestre']
          if not dados or not all(k in dados for k in campos_obrigatorios):
              return jsonify({'erro': 'nome, idade, turma_id, data_nascimento, nota_primeiro_semestre e nota_segundo_semestre são campos obrigatórios.'}), 400
+         turma_id = dados['turma_id']
+         turma = Turma.query.get(turma_id)
+         if not turma:
+             return jsonify({'erro': f'Turma com id {turma_id} não existe.'}), 400
 
          try:
              from datetime import datetime

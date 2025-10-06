@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from models import Professor, banco_de_dados
+from sqlalchemy.exc import IntegrityError
 
 class ProfessorController:
      # A chamada para esse método seria feita diretamente pela classe, sem a necessidade de criar um objeto (uma instância):
@@ -63,9 +64,15 @@ class ProfessorController:
      @staticmethod
      def deletar_professor(professor_id):
          professor = Professor.query.get(professor_id)
-         if professor:
+         if not professor:
+            return jsonify({"erro": "Professor não encontrado."}), 404
+         try:
              banco_de_dados.session.delete(professor)
              banco_de_dados.session.commit()
-             return jsonify({'mensagem': 'Professor deletado com sucesso!'}), 200
-         else:
-             return jsonify({'erro': 'Professor não encontrado.'}), 404
+             return jsonify({"mensagem": "Professor deletado com sucesso!"}), 200
+         except IntegrityError:
+             banco_de_dados.session.rollback()
+             return jsonify({"erro": "Não é possível deletar o professor pois existem turmas vinculadas."}), 409
+         except Exception as e:
+             banco_de_dados.session.rollback()
+             return jsonify({"erro": f"Erro ao deletar professor: {str(e)}"}), 500

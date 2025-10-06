@@ -1,5 +1,6 @@
 from flask import request, jsonify
-from models import Turma, banco_de_dados
+from models import Turma, Professor, banco_de_dados
+from sqlalchemy.exc import IntegrityError
 
 class TurmaController:
      # A chamada para esse método seria feita diretamente pela classe, sem a necessidade de criar um objeto (uma instância):
@@ -25,6 +26,10 @@ class TurmaController:
           campos_obrigatorios = ['nome', 'professor_id']
           if not dados or not all(k in dados for k in campos_obrigatorios):
                return jsonify({'erro': 'nome e professor_id são campos obrigatórios.'}), 400
+          professor_id = dados['professor_id']
+          professor = Professor.query.get(professor_id)
+          if not professor:
+               return jsonify({'erro': f'Professor com id {professor_id} não existe'}), 400
 
           nova_turma = Turma(
                nome = dados['nome'],
@@ -60,9 +65,15 @@ class TurmaController:
      @staticmethod
      def deletar_turma(turma_id):
           turma = Turma.query.get(turma_id)
-          if turma:
+          if not turma:
+            return jsonify({"erro": "Turma não encontrada."}), 404
+          try:
                banco_de_dados.session.delete(turma)
                banco_de_dados.session.commit()
-               return jsonify({'mensagem': 'Turma deletada com sucesso!'}), 200
-          else:
-               return jsonify({'erro': 'Turma não encontrada.'}), 404    
+               return jsonify({"mensagem": "Turma deletada com sucesso!"}), 200
+          except IntegrityError:
+               banco_de_dados.session.rollback()
+               return jsonify({"erro": "Não é possível deletar a turma pois existem alunos vinculados."}), 409
+          except Exception as e:
+               banco_de_dados.session.rollback()
+               return jsonify({"erro": f"Erro ao deletar turma: {str(e)}"}), 500
