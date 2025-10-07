@@ -27,8 +27,8 @@ AP1-Mvc-Flask/
 ├── 📂 config/
 │   └── config.py                 # Configurações da aplicação
 ├── 📂 docs/
-│   ├── swagger.yaml              # Documentação da API
-│   └── documentação.md           # Documentação adicional
+│   ├── Instruções.pdf            # Instruções do projeto acadêmico
+│   └── swagger.yaml              # Documentação da API
 ├── 📂 src/
 │   ├── 📂 api/
 │   │   ├── 📂 aluno/
@@ -46,6 +46,8 @@ AP1-Mvc-Flask/
 │       ├── models_aluno.py        # Modelo do aluno
 │       ├── models_professor.py    # Modelo do professor
 │       └── models_turma.py        # Modelo da turma
+├── .dockerignore                  # Arquivos ignorados pelo Docker
+├── Dockerfile                     # Configuração do container Docker
 ├── main.py                        # Arquivo principal da aplicação
 ├── requirements.txt               # Dependências do projeto
 └── README.md                      # Documentação do projeto
@@ -179,6 +181,9 @@ curl -X POST http://127.0.0.1:5000/alunos \
     "nota_primeiro_semestre": 7.5,
     "nota_segundo_semestre": 8.0
   }'
+
+# Buscar um aluno específico
+curl -X GET http://127.0.0.1:5000/alunos/1
 ```
 
 ### Script de teste Python:
@@ -226,7 +231,7 @@ Este projeto é desenvolvido para fins educacionais.
 
 ## 👥 Autor
 
-Desenvolvido como projeto acadêmico (AP1) - Sistema de Gerenciamento Escolar com Flask.
+Desenvolvido como projeto acadêmico - Sistema de Gerenciamento Escolar com Flask - por **Felipe Viana**, **Iago Rozales** e **Ryan Rodrigues**.
 
 ---
 
